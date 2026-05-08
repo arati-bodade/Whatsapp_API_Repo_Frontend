@@ -101,6 +101,16 @@ export default function LandingPage() {
                     --border: rgba(255, 255, 255, 0.08);
                     --border-light: rgba(255, 255, 255, 0.05);
                     --shadow-premium: 0 20px 50px rgba(0,0,0,0.3);
+
+                    /* Enhanced Visibility for Dark Mode */
+                    --primary-glow: rgba(34, 197, 94, 0.35);
+                    --accent-glow: rgba(37, 99, 235, 0.25);
+                    --primary: #4ADE80; /* Slightly brighter green */
+                    --accent: #60A5FA;  /* Slightly brighter blue */
+                }
+
+                .dark img {
+                    filter: brightness(1.1) contrast(1.1);
                 }
 
                 *,*::before,*::after {
