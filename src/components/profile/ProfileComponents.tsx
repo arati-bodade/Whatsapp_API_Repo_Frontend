@@ -11,7 +11,7 @@ import {
     Camera, Trash2, CheckCircle2,
     Eye, EyeOff
 } from "lucide-react"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import resellerService from "@/services/resellerService"
 import profilePhotoService from "@/services/profilePhotoService"
