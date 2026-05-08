@@ -592,6 +592,7 @@ export function SecuritySettingsSection() {
         e.preventDefault()
         setError(null); setSuccess(false)
         if (newPassword !== confirmPassword) { setError("Passwords do not match."); return }
+        if (newPassword === currentPassword) { setError("New password cannot be the same as current password."); return }
         if (newPassword.length < 6) { setError("New password must be at least 6 characters."); return }
         setLoading(true)
         try {
