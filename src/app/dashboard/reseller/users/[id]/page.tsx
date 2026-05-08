@@ -181,7 +181,7 @@ export default function UserDetailPage({ params, searchParams }: PageProps) {
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Date of Joining</label>
-                                        <Input disabled value={new Date(user.created_at || new Date()).toISOString().split('T')[0]} className="h-12 bg-slate-50 border-slate-200 rounded-lg text-slate-500 font-bold opacity-70" />
+                                        <Input disabled value={new Date(user.profile.created_at || new Date()).toISOString().split('T')[0]} className="h-12 bg-slate-50 border-slate-200 rounded-lg text-slate-500 font-bold opacity-70" />
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@ export default function UserDetailPage({ params, searchParams }: PageProps) {
                                             { label: "Mobile Number", value: user.profile.phone, icon: Phone },
                                             { label: "Username", value: user.profile.username || 'N/A', icon: User },
                                             { label: "Role/Type", value: user.role, icon: Briefcase },
-                                            { label: "Joining Date", value: user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A', icon: Calendar }
+                                            { label: "Joining Date", value: user.profile.created_at ? new Date(user.profile.created_at).toLocaleDateString() : 'N/A', icon: Calendar }
                                         ].map((field, idx) => (
                                             <div key={idx} className="space-y-1.5 group">
                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">{field.label}</p>
