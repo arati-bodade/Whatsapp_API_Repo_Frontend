@@ -667,16 +667,17 @@ export function SecuritySettingsSection() {
                                         <Input type={visible ? "text" : "password"} required value={value}
                                             onChange={(e) => set(e.target.value)}
                                             className={cn(
-                                                "h-10 rounded-xl border-slate-200 focus:border-[#128C7E] pr-10",
+                                                "h-10 rounded-xl border-slate-200 focus:border-[#128C7E] pr-12 transition-all",
                                                 key === 'confirm' && confirmError ? "border-red-300 bg-red-50/30" : ""
                                             )}
                                             placeholder={`Enter ${label.toLowerCase()}`} />
                                         <button
                                             type="button"
                                             onClick={() => toggleVisibility(key as any)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                                            className="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-[#128C7E] transition-colors z-30 pointer-events-auto"
+                                            title={visible ? "Hide password" : "Show password"}
                                         >
-                                            {visible ? <EyeOff size={16} /> : <Eye size={16} />}
+                                            {visible ? <EyeOff size={18} /> : <Eye size={18} />}
                                         </button>
                                     </div>
                                     {key === 'new' && (
