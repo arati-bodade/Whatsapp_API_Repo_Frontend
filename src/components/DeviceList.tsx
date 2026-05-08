@@ -630,13 +630,10 @@ export default function DeviceList({ userId }: { userId: string }) {
                                             value={newDeviceName}
                                             onChange={(e) => setNewDeviceName(e.target.value)}
                                             placeholder="e.g. Sales Team iPhone"
-                                            className="w-full pl-4 pr-12 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-gray-900 font-bold placeholder:text-gray-300 shadow-sm"
+                                            className="w-full px-4 py-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-gray-900 font-bold placeholder:text-gray-300 shadow-sm"
                                             autoFocus
                                             required
                                         />
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-blue-500 transition-colors">
-                                            <Info className="w-5 h-5" />
-                                        </div>
                                     </div>
                                     <p className="text-[11px] text-gray-400 italic ml-1 flex items-center gap-1">
                                         <Activity className="w-3 h-3" />
