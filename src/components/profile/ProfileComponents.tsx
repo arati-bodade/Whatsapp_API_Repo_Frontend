@@ -570,7 +570,17 @@ export function SecuritySettingsSection() {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [confirmError, setConfirmError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
+
+    // Real-time validation for password matching
+    useEffect(() => {
+        if (confirmPassword && newPassword !== confirmPassword) {
+            setConfirmError("Passwords do not match")
+        } else {
+            setConfirmError(null)
+        }
+    }, [newPassword, confirmPassword])
 
     const handlePasswordChange = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -638,16 +648,34 @@ export function SecuritySettingsSection() {
                                 { label: "Confirm Password", key: "confirm", value: confirmPassword, set: setConfirmPassword },
                             ].map(({ label, key, value, set }) => (
                                 <div key={key} className="space-y-1.5">
-                                    <label className="section-label">{label}</label>
+                                    <div className="flex justify-between items-center">
+                                        <label className="section-label">{label}</label>
+                                        {key === 'confirm' && confirmError && (
+                                            <span className="text-[10px] font-bold text-red-500 animate-pulse">
+                                                {confirmError}
+                                            </span>
+                                        )}
+                                    </div>
                                     <Input type="password" required value={value}
                                         onChange={(e) => set(e.target.value)}
-                                        className="h-10 rounded-xl border-slate-200 focus:border-[#128C7E]"
+                                        className={cn(
+                                            "h-10 rounded-xl border-slate-200 focus:border-[#128C7E]",
+                                            key === 'confirm' && confirmError ? "border-red-300 bg-red-50/30" : ""
+                                        )}
                                         placeholder={`Enter ${label.toLowerCase()}`} />
+                                    {key === 'new' && (
+                                        <p className="text-[10px] text-slate-400 font-medium">
+                                            Minimum 6 characters required for better security.
+                                        </p>
+                                    )}
                                 </div>
                             ))}
                             <DialogFooter className="pt-2">
-                                <Button type="submit" disabled={loading}
-                                    className="w-full bg-[#128C7E] hover:bg-[#0e7468] text-white font-semibold h-11 rounded-xl btn-press">
+                                <Button type="submit" disabled={loading || !!confirmError}
+                                    className={cn(
+                                        "w-full text-white font-semibold h-11 rounded-xl btn-press transition-all",
+                                        confirmError ? "bg-slate-300 cursor-not-allowed" : "bg-[#128C7E] hover:bg-[#0e7468] shadow-sm shadow-teal-100"
+                                    )}>
                                     {loading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" />Updating…</> : "Update Password"}
                                 </Button>
                             </DialogFooter>
