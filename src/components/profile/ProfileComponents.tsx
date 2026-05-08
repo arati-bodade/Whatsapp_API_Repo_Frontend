@@ -674,10 +674,24 @@ export function SecuritySettingsSection() {
                                         <button
                                             type="button"
                                             onClick={() => toggleVisibility(key as any)}
-                                            className="absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-[#128C7E] transition-colors z-30 pointer-events-auto"
+                                            style={{
+                                                position: 'absolute',
+                                                right: '12px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                zIndex: 100,
+                                                background: 'none',
+                                                border: 'none',
+                                                padding: '4px',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                color: '#128C7E'
+                                            }}
                                             title={visible ? "Hide password" : "Show password"}
                                         >
-                                            {visible ? <EyeOff size={18} /> : <Eye size={18} />}
+                                            {visible ? <EyeOff size={18} strokeWidth={2.5} /> : <Eye size={18} strokeWidth={2.5} />}
                                         </button>
                                     </div>
                                     {key === 'new' && (
