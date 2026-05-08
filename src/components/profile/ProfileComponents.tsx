@@ -8,7 +8,8 @@ import {
     Save, X, Loader2, CreditCard, Wallet,
     TrendingUp, DollarSign, Calendar, Mail,
     Phone, MapPin, Briefcase, Globe,
-    Camera, Trash2, CheckCircle2
+    Camera, Trash2, CheckCircle2,
+    Eye, EyeOff
 } from "lucide-react"
 import { useState, useRef } from "react"
 import { Input } from "@/components/ui/input"
@@ -572,6 +573,11 @@ export function SecuritySettingsSection() {
     const [error, setError] = useState<string | null>(null)
     const [confirmError, setConfirmError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
+    const [showPass, setShowPass] = useState({ current: false, new: false, confirm: false })
+
+    const toggleVisibility = (key: 'current' | 'new' | 'confirm') => {
+        setShowPass(prev => ({ ...prev, [key]: !prev[key] }))
+    }
 
     // Real-time validation for password matching
     useEffect(() => {
@@ -643,10 +649,10 @@ export function SecuritySettingsSection() {
                                 </div>
                             )}
                             {[
-                                { label: "Current Password", key: "current", value: currentPassword, set: setCurrentPassword },
-                                { label: "New Password",     key: "new",     value: newPassword,     set: setNewPassword },
-                                { label: "Confirm Password", key: "confirm", value: confirmPassword, set: setConfirmPassword },
-                            ].map(({ label, key, value, set }) => (
+                                { label: "Current Password", key: "current", value: currentPassword, set: setCurrentPassword, visible: showPass.current },
+                                { label: "New Password",     key: "new",     value: newPassword,     set: setNewPassword,     visible: showPass.new },
+                                { label: "Confirm Password", key: "confirm", value: confirmPassword, set: setConfirmPassword, visible: showPass.confirm },
+                            ].map(({ label, key, value, set, visible }) => (
                                 <div key={key} className="space-y-1.5">
                                     <div className="flex justify-between items-center">
                                         <label className="section-label">{label}</label>
@@ -656,13 +662,22 @@ export function SecuritySettingsSection() {
                                             </span>
                                         )}
                                     </div>
-                                    <Input type="password" required value={value}
-                                        onChange={(e) => set(e.target.value)}
-                                        className={cn(
-                                            "h-10 rounded-xl border-slate-200 focus:border-[#128C7E]",
-                                            key === 'confirm' && confirmError ? "border-red-300 bg-red-50/30" : ""
-                                        )}
-                                        placeholder={`Enter ${label.toLowerCase()}`} />
+                                    <div className="relative">
+                                        <Input type={visible ? "text" : "password"} required value={value}
+                                            onChange={(e) => set(e.target.value)}
+                                            className={cn(
+                                                "h-10 rounded-xl border-slate-200 focus:border-[#128C7E] pr-10",
+                                                key === 'confirm' && confirmError ? "border-red-300 bg-red-50/30" : ""
+                                            )}
+                                            placeholder={`Enter ${label.toLowerCase()}`} />
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleVisibility(key as any)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                                        >
+                                            {visible ? <EyeOff size={16} /> : <Eye size={16} />}
+                                        </button>
+                                    </div>
                                     {key === 'new' && (
                                         <p className="text-[10px] text-slate-400 font-medium">
                                             Minimum 6 characters required for better security.
