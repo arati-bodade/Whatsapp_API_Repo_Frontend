@@ -1,0 +1,48 @@
+/* Global Body Lock for WhatsApp-style Layout */
+body {
+  overflow: hidden;
+}
+
+/* WhatsApp Web Color Palette */
+.bg-whatsapp-main {
+  background-color: #0b141a;
+}
+
+.bg-whatsapp-sidebar {
+  background-color: #111b21;
+}
+
+.bg-whatsapp-header {
+  background-color: #202c33;
+}
+
+.bg-whatsapp-input {
+  background-color: #2a3942;
+}
+
+.text-whatsapp-primary {
+  color: #00a884;
+}
+
+.text-whatsapp-secondary {
+  color: #667781;
+}
+
+.text-whatsapp-muted {
+  color: #8696a;
+}
+
+.border-whatsapp {
+  border-color: #202c33;
+}
+
+.border-whatsapp-light {
+  border-color: #d1d7db;
+}
+
+/* Ensure full height layout */
+.whatsapp-layout {
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Debug Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Frontend Login Debug Tool</h1>
+    
+    <div class="container">
+        <h2>1. API Configuration Check</h2>
+        <div id="api-status" class="status info">Checking...</div>
+        
+        <h2>2. localStorage Check</h2>
+        <div id="storage-status" class="status info">Checking...</div>
+        
+        <h2>3. API Connectivity Test</h2>
+        <button onclick="testAPI()">Test API Connectivity</button>
+        <div id="api-connect-status" class="status info">Not tested</div>
+        
+        <h2>4. Login Endpoint Test</h2>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="test-email" placeholder="Enter email for testing">
+            <label>Password:</label>
+            <input type="password" id="test-password" placeholder="Enter password for testing">
+        </div>
+        <button onclick="testLogin()">Test Login</button>
+        <div id="login-status" class="status info">Not tested</div>
+        
+        <h2>5. Manual Login Form</h2>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="manual-email" placeholder="Enter your email">
+            <label>Password:</label>
+            <input type="password" id="manual-password" placeholder="Enter your password">
+        </div>
+        <button onclick="manualLogin()">Manual Login</button>
+        <div id="manual-status" class="status info">Not tested</div>
+        
+        <h2>6. Debug Output</h2>
+        <pre id="debug-output">Debug output will appear here...</pre>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('debug-output');
+            const timestamp = new Date().toLocaleTimeString();
+            output.textContent += `[${timestamp}] ${message}\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function updateStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `status ${type}`;
+        }
+
+        // 1. Check API Configuration
+        function checkAPIConfig() {
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const apiURL = isLocalhost ? 
+                `${window.location.origin}/api` : 
+                "https://whatsapp-platfrom-backent1.onrender.com/api";
+            
+            log(`API URL: ${apiURL}`);
+            log(`Environment: ${isLocalhost ? 'Localhost' : 'Production'}`);
+            
+            updateStatus('api-status', `API URL: ${apiURL}`, 'success');
+        }
+
+        // 2. Check localStorage
+        function checkLocalStorage() {
+            const token = localStorage.getItem('token');
+            const refreshToken = localStorage.getItem('refreshToken');
+            const userRole = localStorage.getItem('user_role');
+            const userId = localStorage.getItem('user_id');
+            
+            log(`Token: ${token ? '✅ Present' : '❌ Missing'}`);
+            log(`Refresh Token: ${refreshToken ? '✅ Present' : '❌ Missing'}`);
+            log(`User Role: ${userRole || '❌ Missing'}`);
+            log(`User ID: ${userId || '❌ Missing'}`);
+            
+            const hasTokens = token && refreshToken && userRole && userId;
+            updateStatus('storage-status', hasTokens ? '✅ All tokens present' : '❌ Some tokens missing', hasTokens ? 'success' : 'error');
+        }
+
+        // 3. Test API Connectivity
+        async function testAPI() {
+            updateStatus('api-connect-status', 'Testing...', 'info');
+            
+            try {
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiURL = isLocalhost ? 
+                    `${window.location.origin}/api/busi_users/` : 
+                    "https://whatsapp-platfrom-backent1.onrender.com/api/busi_users/";
+                
+                const response = await fetch(apiURL);
+                
+                if (response.ok) {
+                    const users = await response.json();
+                    log(`✅ API connectivity working - Found ${users.length} users`);
+                    updateStatus('api-connect-status', `✅ API working - ${users.length} users found`, 'success');
+                } else {
+                    log(`❌ API error: ${response.status}`);
+                    updateStatus('api-connect-status', `❌ API error: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Network error: ${error.message}`);
+                updateStatus('api-connect-status', `❌ Network error: ${error.message}`, 'error');
+            }
+        }
+
+        // 4. Test Login
+        async function testLogin() {
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+            
+            if (!email || !password) {
+                updateStatus('login-status', '❌ Please enter email and password', 'error');
+                return;
+            }
+            
+            updateStatus('login-status', 'Testing...', 'info');
+            
+            try {
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiURL = isLocalhost ? 
+                    `${window.location.origin}/api/busi_users/login` : 
+                    "https://whatsapp-platfrom-backent1.onrender.com/api/busi_users/login";
+                
+                const response = await fetch(apiURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ Login successful!`);
+                    log(`Access Token: ${data.access_token ? '✅ Received' : '❌ Missing'}`);
+                    log(`Refresh Token: ${data.refresh_token ? '✅ Received' : '❌ Missing'}`);
+                    log(`User Role: ${data.busi_user?.role || '❌ Missing'}`);
+                    log(`User ID: ${data.busi_user?.busi_user_id || '❌ Missing'}`);
+                    
+                    // Store tokens
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('refreshToken', data.refresh_token);
+                    localStorage.setItem('user_role', data.busi_user.role);
+                    localStorage.setItem('user_id', data.busi_user.busi_user_id);
+                    
+                    updateStatus('login-status', '✅ Login successful! Tokens stored', 'success');
+                    log('✅ Tokens stored in localStorage');
+                    
+                } else {
+                    log(`❌ Login failed: ${data.detail}`);
+                    updateStatus('login-status', `❌ Login failed: ${data.detail}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Login error: ${error.message}`);
+                updateStatus('login-status', `❌ Login error: ${error.message}`, 'error');
+            }
+        }
+
+        // 5. Manual Login
+        async function manualLogin() {
+            const email = document.getElementById('manual-email').value;
+            const password = document.getElementById('manual-password').value;
+            
+            if (!email || !password) {
+                updateStatus('manual-status', '❌ Please enter email and password', 'error');
+                return;
+            }
+            
+            updateStatus('manual-status', 'Attempting manual login...', 'info');
+            
+            try {
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiURL = isLocalhost ? 
+                    `${window.location.origin}/api/busi_users/login` : 
+                    "https://whatsapp-platfrom-backent1.onrender.com/api/busi_users/login";
+                
+                log(`Attempting login with: ${email}`);
+                log(`API URL: ${apiURL}`);
+                
+                const response = await fetch(apiURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ Manual login successful!`);
+                    
+                    // Store tokens
+                    localStorage.setItem('token', data.access_token);
+                    localStorage.setItem('refreshToken', data.refresh_token);
+                    localStorage.setItem('user_role', data.busi_user.role);
+                    localStorage.setItem('user_id', data.busi_user.busi_user_id);
+                    
+                    updateStatus('manual-status', '✅ Login successful! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard/user';
+                    }, 2000);
+                    
+                } else {
+                    log(`❌ Manual login failed: ${data.detail}`);
+                    updateStatus('manual-status', `❌ Login failed: ${data.detail}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Manual login error: ${error.message}`);
+                updateStatus('manual-status', `❌ Login error: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize
+        checkAPIConfig();
+        checkLocalStorage();
+        
+        log('🔍 Frontend Login Debug Tool initialized');
+        log('Use the form above to test different aspects of the login system');
+    </script>
+</body>
+</html>
